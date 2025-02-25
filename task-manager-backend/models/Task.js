@@ -14,6 +14,11 @@ const taskSchema = new mongoose.Schema({
     enum: ['todo', 'in-progress', 'completed'],
     default: 'todo',
   },
+  category: {
+    type: String,
+    enum: ['work', 'personal', 'study', 'shopping', 'health', 'others'],
+    default: 'others',
+  },
   priority: {
     type: String,
     enum: ['low', 'medium', 'high'],
