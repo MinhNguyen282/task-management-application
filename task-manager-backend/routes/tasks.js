@@ -19,7 +19,9 @@ router.post('/', async (req, res) => {
     const task = new Task({
       title: req.body.title,
       description: req.body.description,
-      status: req.body.status || 'todo'
+      status: req.body.status || 'todo',
+      category: req.body.category || 'others',
+      priority: req.body.priority || 'medium',
     });
     const newTask = await task.save();
     res.status(201).json(newTask);
@@ -39,6 +41,8 @@ router.patch('/:id', async (req, res) => {
     if (req.body.title) task.title = req.body.title;
     if (req.body.description) task.description = req.body.description;
     if (req.body.status) task.status = req.body.status;
+    if (req.body.category) task.category = req.body.category;
+    if (req.body.priority) task.priority = req.body.priority;
 
     const updatedTask = await task.save();
     res.json(updatedTask);
