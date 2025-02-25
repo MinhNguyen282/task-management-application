@@ -4,6 +4,8 @@ import axios from 'axios';
 import Task from './Task';
 import LoadingSpinner from './LoadingSpinner';
 import './TaskList.css';
+import config from '../config';
+
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
@@ -17,7 +19,7 @@ const TaskList = () => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/tasks');
+      const response = await axios.get(`${config.API_URL}/tasks`);
       setTasks(response.data);
       setError(null);
     } catch (error) {

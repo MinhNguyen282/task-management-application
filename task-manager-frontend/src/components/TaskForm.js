@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './TaskForm.css';
+import config from '../config';
 
 const TaskForm = ({ onTaskCreated }) => {
   const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ const TaskForm = ({ onTaskCreated }) => {
     setSuccess('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/tasks', formData);
+      const response = await axios.get(`${config.API_URL}/tasks`, formData);
       onTaskCreated(response.data);
       setSuccess('Task created successfully!');
       setFormData({

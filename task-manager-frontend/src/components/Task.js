@@ -1,8 +1,9 @@
-// client/src/components/Task.js
+// src/components/Task.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import config from '../config';
 
-const Task = ({ task, onDelete }) => {
+const Task = ({ task, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState({
     title: task.title,
@@ -12,10 +13,10 @@ const Task = ({ task, onDelete }) => {
 
   const handleEdit = async () => {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/tasks/${task._id}`, editedTask);
+      await axios.patch(`${config.API_URL}/tasks/${task._id}`, editedTask);
       setIsEditing(false);
-      // You might want to add a prop to refresh the task list after editing
-      window.location.reload(); // This is a simple solution, but not the best practice
+      // Call the onUpdate prop to refresh the task list
+      if (onUpdate) onUpdate();
     } catch (error) {
       console.error('Error updating task:', error);
     }
