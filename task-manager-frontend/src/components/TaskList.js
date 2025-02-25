@@ -3,42 +3,40 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Task from './Task';
 import LoadingSpinner from './LoadingSpinner';
-import './TaskList.css';
-import config from '../config';
-
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${config.API_URL}/tasks`);
+      const response = await axios.get(`${API_URL}/tasks`);
       setTasks(response.data);
       setError(null);
     } catch (error) {
+      console.error('Error fetching tasks:', error);
       setError('Error fetching tasks. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleTaskDelete = async (id) => {
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const handleTaskDelete = async (taskId) => {
     try {
-      setLoading(true);
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`);
-      // Refresh the task list after deletion
-      await fetchTasks();
+      // Remove task from UI immediately
+      setTasks(tasks.filter(task => task._id !== taskId));
     } catch (error) {
-      setError('Error deleting task. Please try again later.');
-    } finally {
-      setLoading(false);
+      console.error('Error deleting task:', error);
+      // Refresh the list to ensure UI is in sync with backend
+      fetchTasks();
     }
   };
 
@@ -60,4 +58,4 @@ const TaskList = () => {
   );
 };
 
-export default TaskList;
+export default Task;

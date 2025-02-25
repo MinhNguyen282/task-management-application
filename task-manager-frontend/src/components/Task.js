@@ -1,21 +1,40 @@
-// src/components/Task.js
+// client/src/components/Task.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import config from '../config';
 
 const Task = ({ task, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [editedTask, setEditedTask] = useState({
     title: task.title,
     description: task.description,
     status: task.status
   });
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this task?')) {
+      try {
+        setIsDeleting(true);
+        await axios.delete(`${API_URL}/tasks/${task._id}`);
+        if (onDelete) {
+          onDelete(task._id);
+        }
+      } catch (error) {
+        console.error('Error deleting task:', error);
+        alert('Error deleting task. Please try again.');
+      } finally{
+        setIsDeleting(false);
+      }
+    }
+  };
+
   const handleEdit = async () => {
     try {
-      await axios.patch(`${config.API_URL}/tasks/${task._id}`, editedTask);
+      await axios.patch(`${API_URL}/tasks/${task._id}`, editedTask);
       setIsEditing(false);
-      // Call the onUpdate prop to refresh the task list
       if (onUpdate) onUpdate();
     } catch (error) {
       console.error('Error updating task:', error);
@@ -59,7 +78,12 @@ const Task = ({ task, onDelete, onUpdate }) => {
       <p>Status: {task.status}</p>
       <div className="task-actions">
         <button onClick={() => setIsEditing(true)}>Edit</button>
-        <button onClick={() => onDelete(task._id)}>Delete</button>
+        <button 
+          onClick={handleDelete}
+          disabled={isDeleting}
+        >
+          {isDeleting ? 'Deleting...' : 'Delete'}
+        </button>
       </div>
     </div>
   );
