@@ -2,25 +2,44 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db');
+const mongoose = require('mongoose');
+const taskRoutes = require('./routes/tasks');
 
 const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
+  origin: '*', // For testing. Change to your frontend URL in production
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
 
-// Routes
-app.use('/api/tasks', require('./routes/tasks'));
-
-// Health check route
+// Test route
 app.get('/', (req, res) => {
-  res.send('API is running...');
+  res.send('API is running');
+});
+
+// Routes
+app.use('/api/tasks', taskRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('MongoDB connection error:', error);
+  });
