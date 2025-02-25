@@ -13,7 +13,7 @@ const Task = ({ task, onDelete, onUpdate }) => {
     status: task.status || 'todo'
   });
 
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this task?')) {
