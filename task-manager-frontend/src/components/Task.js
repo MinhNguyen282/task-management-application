@@ -1,18 +1,19 @@
 // client/src/components/Task.js
 import React, { useState } from 'react';
 import axios from 'axios';
+// import Task.css
+import './Task.css';
 
 const Task = ({ task, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
   const [editedTask, setEditedTask] = useState({
-    title: task.title,
-    description: task.description,
-    status: task.status
+    title: task.title || '',
+    description: task.description || '',
+    status: task.status || 'todo'
   });
 
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this task?')) {
@@ -25,17 +26,19 @@ const Task = ({ task, onDelete, onUpdate }) => {
       } catch (error) {
         console.error('Error deleting task:', error);
         alert('Error deleting task. Please try again.');
-      } finally{
+      } finally {
         setIsDeleting(false);
       }
     }
-  };
+  }; 
 
   const handleEdit = async () => {
     try {
-      await axios.patch(`${API_URL}/tasks/${task._id}`, editedTask);
+      const response = await axios.patch(`${API_URL}/tasks/${task._id}`, editedTask);
       setIsEditing(false);
-      if (onUpdate) onUpdate();
+      if (onUpdate) {
+        onUpdate(response.data);
+      }
     } catch (error) {
       console.error('Error updating task:', error);
     }
@@ -50,10 +53,12 @@ const Task = ({ task, onDelete, onUpdate }) => {
           type="text"
           value={editedTask.title}
           onChange={(e) => setEditedTask({ ...editedTask, title: e.target.value })}
+          placeholder="Task title"
         />
         <textarea
           value={editedTask.description}
           onChange={(e) => setEditedTask({ ...editedTask, description: e.target.value })}
+          placeholder="Task description"
         />
         <select
           value={editedTask.status}
@@ -65,8 +70,10 @@ const Task = ({ task, onDelete, onUpdate }) => {
             </option>
           ))}
         </select>
-        <button onClick={handleEdit}>Save</button>
-        <button onClick={() => setIsEditing(false)}>Cancel</button>
+        <div className="button-group">
+          <button onClick={handleEdit}>Save</button>
+          <button onClick={() => setIsEditing(false)}>Cancel</button>
+        </div>
       </div>
     );
   }

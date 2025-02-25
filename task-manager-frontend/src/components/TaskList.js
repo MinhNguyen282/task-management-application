@@ -9,7 +9,7 @@ const TaskList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
   const fetchTasks = async () => {
     try {
@@ -29,20 +29,17 @@ const TaskList = () => {
     fetchTasks();
   }, []);
 
-  const handleTaskDelete = async (taskId) => {
-    try {
-      // Remove task from UI immediately
-      setTasks(tasks.filter(task => task._id !== taskId));
-    } catch (error) {
-      console.error('Error deleting task:', error);
-      // Refresh the list to ensure UI is in sync with backend
-      fetchTasks();
-    }
+  const handleTaskDelete = (taskId) => {
+    setTasks(tasks.filter(task => task._id !== taskId));
+  };
+
+  const handleTaskUpdate = async () => {
+    await fetchTasks(); // Refresh the list after update
   };
 
   if (loading) return <LoadingSpinner />;
   if (error) return <div className="error-message">{error}</div>;
-  if (tasks.length === 0) return <div className="no-tasks">No tasks found. Create one!</div>;
+  if (!tasks.length) return <div className="no-tasks">No tasks found. Create one!</div>;
 
   return (
     <div className="task-list">
@@ -51,11 +48,11 @@ const TaskList = () => {
           key={task._id}
           task={task}
           onDelete={handleTaskDelete}
-          onUpdate={fetchTasks}
+          onUpdate={handleTaskUpdate}
         />
       ))}
     </div>
   );
 };
 
-export default Task;
+export default TaskList;
