@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: task-manager-backend
+    env: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && node server.js
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
