@@ -1,7 +1,6 @@
 // client/src/components/TaskList.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import Task from './Task';
 import LoadingSpinner from './LoadingSpinner';
 
@@ -10,9 +9,6 @@ const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const navigate = useNavigate();
-  const API_URL = process.env.REACT_APP_API_URL;
 
   const filteredTasks = tasks.filter(task => 
     selectedCategory === 'all' ? true : task.category === selectedCategory
@@ -23,21 +19,12 @@ const TaskList = () => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
 
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
-      const response = await axios.get(`${API_URL}/tasks`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.get(`/tasks`);
 
       setTasks(response.data);
       setError(null);
+
     } catch (error) {
       console.error('Error fetching tasks:', error);
       setError('Error fetching tasks. Please try again later.');
@@ -51,8 +38,13 @@ const TaskList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleTaskDelete = (taskId) => {
-    setTasks(tasks.filter(task => task._id !== taskId));
+  const handleTaskDelete = async (taskId) => {
+    try {
+      await api.delete(`/tasks/${taskId}`);
+      setTasks(tasks.filter(task => task._id !== taskId));
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
   };
 
   const handleTaskUpdate = async () => {

@@ -1,9 +1,8 @@
 // client/src/components/TaskForm.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import CategoryLabel from './CategoryLabel';
 import './TaskForm.css';
+import api from '../utils/api';
 
 const TaskForm = ({ onTaskCreated }) => {
   const [formData, setFormData] = useState({
@@ -12,33 +11,15 @@ const TaskForm = ({ onTaskCreated }) => {
     status: 'todo',
     category: 'others',
     priority: 'medium',
-    user: null,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
   const categories = ['work', 'personal', 'study', 'shopping', 'health', 'others'];
 
   const priorityLevels = ['low', 'medium', 'high'];
 
   const API_URL = process.env.REACT_APP_API_URL;
-
-  useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const storedUser = localStorage.getItem('user');
-        if (!storedUser) {
-          throw new Error('Invalid user data');
-        }
-        setUser(storedUser);
-      } catch (error) {
-        console.error('Error loading user data:', error);
-      }
-    }
-    loadUserData();
-  }, [navigate]);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,13 +30,8 @@ const TaskForm = ({ onTaskCreated }) => {
       console.log('Submitting to:', `${API_URL}/tasks`);
       console.log('Data:', formData);
       
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/tasks`, formData);
-      console.log('Response:', response.data);
-      
-      if (onTaskCreated) {
-        onTaskCreated(response.data);
-      }
-      
+      const response = await api.post('/tasks', formData);
+      onTaskCreated(response.data);
       setFormData({
         title: '',
         description: '',
@@ -73,10 +49,6 @@ const TaskForm = ({ onTaskCreated }) => {
       setLoading(false);
     }
   };
-
-  if (!user) {
-    return <div className="loading">Loading user data...</div>;
-  }
 
   return (
     <div className="task-form-container">

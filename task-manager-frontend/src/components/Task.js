@@ -1,6 +1,6 @@
 // client/src/components/Task.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import CategoryLabel from './CategoryLabel';
 import './Task.css';
 
@@ -15,15 +15,13 @@ const Task = ({ task, onDelete, onUpdate }) => {
     priority: task.priority || 'medium',
   });
 
-  const API_URL = process.env.REACT_APP_API_URL;
-
   const categories = ['work', 'personal', 'study', 'shopping', 'health', 'others'];
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       try {
         setIsDeleting(true);
-        await axios.delete(`${API_URL}/tasks/${task._id}`);
+        await api.delete(`/tasks/${task._id}`);
         if (onDelete) {
           onDelete(task._id);
         }
@@ -38,7 +36,7 @@ const Task = ({ task, onDelete, onUpdate }) => {
 
   const handleEdit = async () => {
     try {
-      const response = await axios.patch(`${API_URL}/tasks/${task._id}`, editedTask);
+      const response = await api.patch(`/tasks/${task._id}`, editedTask);
       setIsEditing(false);
       if (onUpdate) {
         onUpdate(response.data);
