@@ -9,7 +9,8 @@ import './App.css';
 
 function App() {
   const isAuthenticated = () => {
-    return localStorage.getItem('token') !== null;
+    const token = localStorage.getItem('token');
+    return !!token && !isTokenExpired(token);
   };
 
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/register" element={isAuthenticated() ? <Navigate to="/tasks" /> : <Register />} />
           <Route path="/tasks" element={isAuthenticated() ? <TaskListPage /> : <Navigate to="/login" />} />
           <Route path="/create" element={isAuthenticated() ? <CreateTask /> : <Navigate to="/login" />} />
+          <Route path="/reset-password" element={<PasswordReset />} />
         </Routes>
       </div>
     </Router>

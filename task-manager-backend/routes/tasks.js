@@ -22,6 +22,7 @@ router.post('/', async (req, res) => {
       status: req.body.status || 'todo',
       category: req.body.category || 'others',
       priority: req.body.priority || 'medium',
+      user: req.user._id,
     });
     const newTask = await task.save();
     res.status(201).json(newTask);

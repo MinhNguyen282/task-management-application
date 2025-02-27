@@ -26,17 +26,14 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
+            axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
                 username: formData.name,
                 email: formData.email,
                 password: formData.password,
             });
-
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
-            navigate('/tasks');
+            navigate('/login');
         } catch (error) {
-            setError(error.response.data.message);
+            setError(error.response?.data?.message || 'Registration failed');
         } finally {
             setLoading(false);
         }

@@ -10,6 +10,7 @@ const TaskList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
 
   const filteredTasks = tasks.filter(task => 
@@ -21,7 +22,19 @@ const TaskList = () => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/tasks`);
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      const response = await axios.get(`${API_URL}/tasks`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
       setTasks(response.data);
       setError(null);
     } catch (error) {

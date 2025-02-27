@@ -93,6 +93,11 @@
     text-decoration: none;
   }
   
+  .auth-links {
+    margin-top: 1rem;
+    text-align: center;
+  }
+
   .auth-link a:hover {
     text-decoration: underline;
   }

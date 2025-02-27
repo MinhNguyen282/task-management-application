@@ -60,6 +60,9 @@ const Login = () => {
                 <p className="auth-link">
                     Don't have an account? <a href="/register">Register</a>
                 </p>
+                <div className="auth-link">
+                    <p>Forgot password? <a href="/reset-password">Reset here</a></p>
+                </div>
             </div>
         </div>
     );
