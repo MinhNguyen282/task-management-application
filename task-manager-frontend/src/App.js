@@ -1,27 +1,47 @@
 // client/src/App.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import TaskListPage from './pages/TaskListPage';
 import CreateTask from './pages/CreateTask';
 import Login from './components/Login';
 import Register from './components/Register';
+import PasswordReset from './components/PasswordReset';
+import { jwtDecode } from 'jwt-decode';
 import './App.css';
 
+const isTokenExpired = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    return decoded.exp < Date.now() / 1000;
+  } catch (error) {
+    return true;
+  }
+}
+
 function App() {
-  const isAuthenticated = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenChecked, setIsAuthenChecked] = useState(false);
+
+  useEffect(() => {
     const token = localStorage.getItem('token');
-    return !!token && !isTokenExpired(token);
-  };
+    const authStatus = token && !isTokenExpired(token);
+    setIsAuthenticated(authStatus);
+    setIsAuthenChecked(true);
+  }, []);
+
+  if (!isAuthenChecked) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={isAuthenticated() ? <Navigate to="/tasks" /> : <Navigate to="/login" />} />
-          <Route path="/login" element={isAuthenticated() ? <Navigate to="/tasks" /> : <Login />} />
-          <Route path="/register" element={isAuthenticated() ? <Navigate to="/tasks" /> : <Register />} />
-          <Route path="/tasks" element={isAuthenticated() ? <TaskListPage /> : <Navigate to="/login" />} />
-          <Route path="/create" element={isAuthenticated() ? <CreateTask /> : <Navigate to="/login" />} />
+          <Route path="/" element={isAuthenticated ? <Navigate to="/tasks" /> : <Navigate to="/login" />} />
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/tasks" /> : <Login />} />
+          <Route path="/register" element={isAuthenticated ? <Navigate to="/tasks" /> : <Register />} />
+          <Route path="/tasks" element={isAuthenticated ? <TaskListPage /> : <Navigate to="/login" />} />
+          <Route path="/create" element={isAuthenticated ? <CreateTask /> : <Navigate to="/login" />} />
           <Route path="/reset-password" element={<PasswordReset />} />
         </Routes>
       </div>

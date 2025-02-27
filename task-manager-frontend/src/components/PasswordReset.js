@@ -4,13 +4,18 @@ import axios from 'axios';
 const ResetPassword = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
             await axios.post(`${process.env.REACT_APP_API_URL}/auth/reset-password`, { email });
             setMessage('Password reset instructions sent to your email');
+            window.confirm(message);
+            setLoading(false);
         } catch (error) {
             setError(error.response?.data?.message || 'Password reset failed');
         }
@@ -25,8 +30,8 @@ const ResetPassword = () => {
                         <label>Email</label>
                         <input
                             type="email"
-                            value={formData.email}
-                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                            value={email.email}
+                            onChange={(e) => setEmail({...email, email: e.target.value})}
                             required
                         />
                     </div>
@@ -39,3 +44,5 @@ const ResetPassword = () => {
         </div>
     );
 };
+
+export default ResetPassword;

@@ -12,6 +12,12 @@ const CreateTask = () => {
     navigate('/');
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  }
+
   return (
     <div className="page-container">
       <div className="page-header">
@@ -21,6 +27,12 @@ const CreateTask = () => {
           onClick={() => navigate('/')}
         >
           View All Tasks
+        </button>
+        <button 
+          className="nav-button"
+          onClick={handleLogout}
+        >
+          Logout
         </button>
       </div>
       <TaskForm onTaskCreated={handleTaskCreated} />

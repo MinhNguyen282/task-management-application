@@ -7,6 +7,12 @@ import './Pages.css';
 const TaskListPage = () => {
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  }
+
   return (
     <div className="page-container">
       <div className="page-header">
@@ -16,6 +22,12 @@ const TaskListPage = () => {
           onClick={() => navigate('/create')}
         >
           Create New Task
+        </button>
+        <button 
+          className="nav-button"
+          onClick={handleLogout}
+        >
+          Logout
         </button>
       </div>
       <TaskList />

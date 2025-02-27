@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Auth.css';
 
@@ -10,7 +9,6 @@ const Login = () => {
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,7 +19,8 @@ const Login = () => {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, formData);
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
-            navigate('/tasks');
+
+            window.location.href = '/tasks';
         } catch (error) {
             setError(error.response.data.message);
         } finally {
