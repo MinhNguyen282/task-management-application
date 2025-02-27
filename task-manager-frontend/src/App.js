@@ -7,32 +7,19 @@ import Login from './components/Login';
 import Register from './components/Register';
 import './App.css';
 
-const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/login" />;
-}
-
 function App() {
+  const isAuthenticated = () => {
+    return localStorage.getItem('token') !== null;
+  };
+  
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/tasks"
-            element={
-              <PrivateRoute>
-                <TaskListPage/>
-              </PrivateRoute>
-            }
-          />
-          <Route path="/create" element={
-            <PrivateRoute>
-              <CreateTask />
-            </PrivateRoute>
-          } />
-          <Route path="/" element={<Navigate to ="/tasks" />} />
+          <Route path="/login" element={isAuthenticated() ? <Navigate to="/tasks" /> : <Login />} />
+          <Route path="/register" element={isAuthenticated() ? <Navigate to="/tasks" /> : <Register />} />
+          <Route path="/tasks" element={isAuthenticated() ? <TaskListPage /> : <Navigate to="/login" />} />
+          <Route path="/create" element={isAuthenticated() ? <CreateTask /> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>
