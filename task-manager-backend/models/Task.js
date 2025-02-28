@@ -35,4 +35,14 @@ const taskSchema = new mongoose.Schema({
   },
 });
 
+//findOneAndDelete
+taskSchema.pre('findOneAndDelete', function(next) {
+  console.log('Attempting to delete task:', this.getQuery());
+  next();
+});
+
+taskSchema.post('findOneAndDelete', function(doc) {
+  console.log('Deleted task:', doc);
+});
+
 module.exports = mongoose.model('Task', taskSchema);
