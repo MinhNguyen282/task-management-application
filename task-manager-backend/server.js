@@ -5,6 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const taskRoutes = require('./routes/tasks');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users')
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api/tasks', taskRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

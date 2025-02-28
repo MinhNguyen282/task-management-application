@@ -6,9 +6,9 @@ import CreateTask from './pages/CreateTask';
 import Login from './components/Login';
 import Register from './components/Register';
 import PasswordReset from './components/PasswordReset';
+import UserProfile from './components/UserProfile';
 import { jwtDecode } from 'jwt-decode';
 import './App.css';
-import UserProfile from './components/UserProfile';
 import Navigation from './components/Navigation/Navigation';
 
 const isTokenExpired = (token) => {

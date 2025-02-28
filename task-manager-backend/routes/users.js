@@ -7,14 +7,15 @@ const bcrypt = require('bcryptjs');
 // Get user profile
 router.get('/profile', auth, async (req, res) => {
     try {
-        const user = await User.findById(req.userId).select('-password');
-        if (!user){
-            return res.status(404).json({ message: 'User not found'});
-        }
-        res.json(user);
+      console.log('Fetching profile for user:', req.userId);
+      const user = await User.findById(req.userId).select('-password');
+      if (!user){
+        return res.status(404).json({ message: 'User not found'});
+      }
+      res.json(user);
     } catch (error){
-        console.log(error.message);
-        res.status(500).json({message: error.message});
+      console.log(error.message);
+      res.status(500).json({message: error.message});
     }
 });
 

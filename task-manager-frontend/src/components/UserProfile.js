@@ -25,12 +25,18 @@ const UserProfile = () => {
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
+      setError(null);
+
       const response = await api.get('/users/profile');
       setUser(response.data);
       setFormData({
         username: response.data.username,
         email: response.data.email,
-        settings: response.data.settings
+        settings: response.data.settings || {
+          emailNotifications: true,
+          darkMode: false,
+          taskReminders: true
+        }
       });
     } catch (error) {
       setError('Error fetching profile');
