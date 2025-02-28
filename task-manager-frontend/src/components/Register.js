@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api'
 import './Auth.css';
 
 const Register = () => {
@@ -26,7 +26,7 @@ const Register = () => {
         }
 
         try {
-            axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
+            api.post(`/auth/register`, {
                 username: formData.name,
                 email: formData.email,
                 password: formData.password,

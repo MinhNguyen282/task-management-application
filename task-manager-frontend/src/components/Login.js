@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import axios from 'axios';
+import api from '../utils/api'
 import './Auth.css';
 
 const Login = () => {
@@ -16,8 +16,8 @@ const Login = () => {
         setError('');
 
         try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/auth/login`,
+            const response = await api.post(
+                `/auth/login`,
                 formData
             )
 
@@ -25,8 +25,7 @@ const Login = () => {
 
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(user));
-
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
             window.location.href = '/tasks';
         } catch (error) {

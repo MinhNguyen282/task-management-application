@@ -11,12 +11,14 @@ router.post('/register', async (req, res) => {
         // Check if the user already exists
         const userExists = await User.findOne({$or: [{username}, {email}]});
         if (userExists) {
+            console.log('User exist');
             return res.status(400).json({message: 'User already exists'});
         }
 
         // Create a new user
         const user = new User({username, email, password});
         await user.save();
+        console.log('User created');
 
         // Create a token
         const token = jwt.sign(
@@ -35,6 +37,7 @@ router.post('/register', async (req, res) => {
             }
         });
     } catch (error) {
+        console.log(error.message);
         res.status(400).json({message: error.message});
     }
 });

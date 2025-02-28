@@ -26,11 +26,26 @@ const TaskForm = ({ onTaskCreated }) => {
     
     try {
       const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
+      console.log(user.id);
       if (!token) {
         throw new Error('You must be logged in to create a task');
       }
+
+      const taskData = {
+        ...formData,
+        userId: user.id
+      };
       
-      const response = await api.post('/tasks', formData);
+      const response = await api.post('/tasks', 
+        taskData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
 
       if (onTaskCreated) {
         onTaskCreated(response.data);

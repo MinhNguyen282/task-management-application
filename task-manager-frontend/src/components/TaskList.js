@@ -14,13 +14,21 @@ const TaskList = () => {
     selectedCategory === 'all' ? true : task.category === selectedCategory
   );
 
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const categories = ['work', 'personal', 'study', 'shopping', 'health', 'others'];
 
   const fetchTasks = async () => {
     try {
       setLoading(true);
-
-      const response = await api.get(`/tasks`);
+      const response = await api.post('/tasks/all', 
+        {
+          userId: user.id,
+        },
+        {
+          'Content-Type': 'application/json'
+        }
+      );
 
       setTasks(response.data);
       setError(null);
