@@ -16,9 +16,17 @@ const Login = () => {
         setError('');
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, formData);
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/login`,
+                formData
+            )
+
+            const {token, user} = response.data;
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
             window.location.href = '/tasks';
         } catch (error) {

@@ -18,8 +18,6 @@ const TaskForm = ({ onTaskCreated }) => {
   const categories = ['work', 'personal', 'study', 'shopping', 'health', 'others'];
 
   const priorityLevels = ['low', 'medium', 'high'];
-
-  const API_URL = process.env.REACT_APP_API_URL;
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,18 +25,23 @@ const TaskForm = ({ onTaskCreated }) => {
     setError(null);
     
     try {
-      console.log('Submitting to:', `${API_URL}/tasks`);
-      console.log('Data:', formData);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('You must be logged in to create a task');
+      }
       
       const response = await api.post('/tasks', formData);
-      onTaskCreated(response.data);
+
+      if (onTaskCreated) {
+        onTaskCreated(response.data);
+      }
+
       setFormData({
         title: '',
         description: '',
         status: 'todo',
         category: 'others',
         priority: 'medium',
-        user: '',
       });
       
     } catch (error) {
