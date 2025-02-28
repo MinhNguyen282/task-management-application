@@ -19,6 +19,24 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    settings: {
+        emailNotifications: {
+            type: Boolean,
+            default: true
+        },
+        darkMode: {
+            type: Boolean,
+            default: false
+        },
+        taskReminders: {
+            type: Boolean,
+            default: true
+        }      
+    },
+    avatar: {
+        type: String,
+        default: ''
+    },
     createdAt: {
         type: Date,
         default: Date.now

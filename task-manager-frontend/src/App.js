@@ -8,6 +8,8 @@ import Register from './components/Register';
 import PasswordReset from './components/PasswordReset';
 import { jwtDecode } from 'jwt-decode';
 import './App.css';
+import UserProfile from './components/UserProfile';
+import Navigation from './components/Navigation/Navigation';
 
 const isTokenExpired = (token) => {
   try {
@@ -36,14 +38,18 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Routes>
-          <Route path="/" element={isAuthenticated ? <Navigate to="/tasks" /> : <Navigate to="/login" />} />
-          <Route path="/login" element={isAuthenticated ? <Navigate to="/tasks" /> : <Login />} />
-          <Route path="/register" element={isAuthenticated ? <Navigate to="/tasks" /> : <Register />} />
-          <Route path="/tasks" element={isAuthenticated ? <TaskListPage /> : <Navigate to="/login" />} />
-          <Route path="/create" element={isAuthenticated ? <CreateTask /> : <Navigate to="/login" />} />
-          <Route path="/reset-password" element={<PasswordReset />} />
-        </Routes>
+        <Navigation />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={isAuthenticated ? <Navigate to="/tasks" /> : <Navigate to="/login" />} />
+            <Route path="/login" element={isAuthenticated ? <Navigate to="/tasks" /> : <Login />} />
+            <Route path="/register" element={isAuthenticated ? <Navigate to="/tasks" /> : <Register />} />
+            <Route path="/tasks" element={isAuthenticated ? <TaskListPage /> : <Navigate to="/login" />} />
+            <Route path="/create" element={isAuthenticated ? <CreateTask /> : <Navigate to="/login" />} />
+            <Route path="/profile" element={isAuthenticated ? <UserProfile /> : <Navigate to="/login"/>} />
+            <Route path="/reset-password" element={<PasswordReset />} />
+          </Routes>
+        </main>
       </div>
     </Router>
   );
